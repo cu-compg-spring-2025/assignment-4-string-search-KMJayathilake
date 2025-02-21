@@ -31,3 +31,11 @@ python src/string_search.py \
 ```
 <center><img src="/doc/naive_search.png" width="600"/></center>
 
+To replicate these experiments, clone the repository and then run the empirical
+and simulation experiments as follows:
+1. Clone the repository using the following command:
+git clone https://github.com/cu-compg-spring-2025/assignment-4-searching-KMJayathil
+2. Navigate to the source directory:
+cd src
+3. Run the experiment with the specified parameters:
+python string_search.py --text_range 100 2000 200 --pattern_size 10 --rounds 10 --out_file results.png

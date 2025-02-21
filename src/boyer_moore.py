@@ -40,16 +40,38 @@ def get_good_suffix_table(P):
                 good_suffix_table[j] = min(good_suffix_table[j], j + i)
     return good_suffix_table
 
+
+
 def get_bad_char_table(P):
+    
     bad_char_table = {}
-    #####################################################################
-    ## ADD CODE HERE
-    #####################################################################
+    for i in range(len(P)):
+        bad_char_table[P[i]] = i  
     return bad_char_table
 
 def boyer_moore_search(T, P):
+    
+    n = len(T)
+    m = len(P)
+
+    if m == 0 or n == 0 or m > n:
+        return []  
+
+    bad_char_table = get_bad_char_table(P)
     occurrences = []
-    #####################################################################
-    ## ADD CODE HERE
-    #####################################################################
+
+    i = 0  
+    while i <= n - m:
+        j = m - 1  
+
+        while j >= 0 and P[j] == T[i + j]:
+            j -= 1  
+
+        if j < 0:  
+            occurrences.append(i)
+            i += (m - bad_char_table.get(T[i + m], -1)) if i + m < n else 1
+        else:
+            
+            i += max(1, j - bad_char_table.get(T[i + j], -1))
+
     return occurrences

@@ -1,86 +1,82 @@
-\documentclass[11pt, letterpaper]{article}
-\usepackage[margin=0.5in]{geometry}
-\usepackage{graphicx}
+\documentclass{article}
+\usepackage{float}
+\usepackage{graphicx} % Required for inserting images
+
+\title{Assignment 4 : String Search}
+\author{Kanishka Jayathilake}
+\date{February 2025}
 
 \begin{document}
 
-\title{String Search}
-\author{Ryan Layer}
 \maketitle
 
 \section{Introduction}
-An organism's DNA encompasses all instructions for its development and
-function. To link specific DNA sequences to particular traits or diseases, we
-analyze the DNA of individuals exhibiting similar or differing characteristics.
-DNA's structure—a long sequence of nucleotides denoted by A, C, T, and
-G—transforms the comparison of two genomes into a computational string search
-challenge. This problem involves two input strings: a typically longer string,
-the text $T$, and a usually shorter string, the pattern $P$. The
-objective is to locate every instance of $P$ within $T$. Here we analyze the
-the efficiency and memory consumption of a basic string search algorithm that
-aligns $P$ with all possible positions in $T$.  The algorithm's runtime
-correlated with $T$'s length and it's additional memory requirement were
-minimal.
 
-\section{Results}
+The main purpose of this experiment is to compare the performance of Naive and Boyer Moore Search across different text sizes. Both algorithms are used for pattern matching, but their approaches differ significantly. Naive Search follows a brute-force approach, checking every possible position in the text where the pattern might appear. It can be slow for large text sizes. Boyer-Moore Search optimizes the process by skipping unnecessary comparisons using the bad character rule and good suffix rule, making it more efficient in most cases.
 
-As expected, the runtime of the naive string search algorithm increased
-linearly and the memory usage remained constant as the text size increased
-(Figure~\ref{timeandmem}). The algorithm's runtime increased linearly with
-the text size because the algorithm considers all possible alignments of the
-pattern $P$ with the text $T$. As the text size increases, the number of
-possible alignments increases linearly. The algorithm's memory usage remained
-constant because the algorithm only stores the positions of the pattern $P$ in
-the text $T$.
+This experiment focuses on runtime performance and memory usage for both algorithms. By analyzing how their performance changes with increasing text sizes, our goal is to determine whether Boyer-Moore consistently outperforms Naive Search and in what cases Naive Search might still be useful.
 
-%%%%% Add your experiment here %%%%
+\section{Result}
 
-\begin{figure}[ht] \centering
-    \includegraphics[width=0.6\textwidth]{naive_search}
-    \caption{The empirical runtime and memory usage of the naive string search
-    algorithm considering a pattern size of 100 and a database size ranging
-    from 100 to 10,000 characters.}
-    \label{timeandmem}
+This experiment generated two key graphs, one for runtime analysis and another for memory usage.
+
+In the runtime analysis graph, Boyer-Moore demonstrated consistently better performance, with runtime remaining stable even as text size increased. Naive Search. However that graph  showed large fluctuations with major spikes at text sizes around 1250 and 1750 characters. These spikes suggest that the efficiency of Naive Search is highly dependent on the text’s structure and how often the pattern appears. 
+
+The memory usage graph showed that Naive Search consistently used more memory than Boyer-Moore. The memory consumption for Naive Search was around 150 or more bytes, while Boyer-Moore remained closer to 100 bytes. This suggests that Boyer-Moore is not only faster but also more memory-efficient, making it the better choice for large-scale searches. While both algorithms required more memory as the text size increased, Boyer-Moore maintained a lower and more stable memory usage than Naive search.
+
+
+
+\begin{figure}[H] 
+    \centering
+    \includegraphics[width=0.7\textwidth]{results.png}
+    \caption{Result Graphs}
+    \label{fig:results}
 \end{figure}
 
-%%%% Add your figure here %%%%
 
-\section{Methods}
 
-\subsection{Naive string search}
-The naive string search algorithm considers all possible alignments of the
-pattern $P$ with the text $T$. Staring at the first position in $T$, the
-algorithm compares $P$'s characters with the corresponding characters in $T$.
-If all characters match, the algorithm records the alignment's position in $T$.
-The algorithm then repeats this process for the next alignment. If any of the 
-characters in $P$ do not match a corresponding character in $T$, the current
-alignment breaks and then $P$ shifts down one position in $T$, and the process
-repeats. This process continues until $P$ has been compared to all possible
-alignments in $T$, then returns the recorded positions.
+\section{Method}
 
-\subsection{Empirical comparison}
+For this experiment, a series of random text strings and patterns were generated to test each algorithm under controlled conditions. The text sizes ranged from 100 to 2000 characters, increasing in steps of 200 characters. The patterns used for searching were randomly generated with a fixed length of 10 characters.
 
-We evaluated the performance of the naive string search algorithm considering a
-pattern size of 100 and text sizes that ranged from 100 to 10,000 characters
-with a step size of 100.  The performance metrics include runtime and memory
-usage. For each text size, we ran a single search where we generated a random
-string for $T$ from the alphabet ${A, C, T, G}$ and extracted a random
-substring $P$ from $T$. We then recorded the runtime and memory usage of the
-algorithm consiuder that $P$ and $T$. After the round was complete for a given
-text size, we calculated the average runtime and memory usage for the search.
+To ensure accuracy, each search algorithm was tested 10 times per text size, and the average runtime and memory usage were recorded. Runtime was measured in nanoseconds to track execution speed, while memory usage was measured in bytes. The same randomly generated texts and patterns were used for each test, ensuring fair comparisons between Naive Search and Boyer Moore.
+
+One important factor considered was how the distribution of characters in the text affects performance. Since Boyer Moore relies on skipping sections of text, its efficiency improves when the text contains diverse characters that trigger more skips. Naive Search doesn't benefit from such variations and performs similarly regardless of character distribution.
 
 \subsection{Reproducibility}
-To replicate these experiments, clone the repository and then run the
-following commands from the root directory of the repository.
-\begin{verbatim}
-$ git clone https://github.com/ryanlayerlab/string_search.git
-$ cd string_search
-$ python src/string_search.py \
-    --text_range 100 10000 100 \
-    --pattern_size 100 \
-    --rounds 1 \
-    --out_file doc/naive_search.png
-\end{verbatim}
-%%%% Add your command here%%%%
+
+ To replicate these experiments, clone the repository and then run the empirical and simulation experiments as
+ follows:
+
+ \begin{enumerate}
+    \item \textbf{Clone the repository} using the following command:
+    \begin{verbatim}
+    git clone https://github.com/cu-compg-spring-2025/assignment-4-searching-KMJayathilake.git
+    \end{verbatim}
+
+    \item \textbf{Navigate to the source directory}:
+    \begin{verbatim}
+    cd src
+    \end{verbatim}
+
+    \item \textbf{Run the experiment} with the specified parameters:
+    \begin{verbatim}
+    python string_search.py --text_range 100 2000 200 --pattern_size 10 --rounds 10 --out_file results.png
+
+    \end{verbatim}
+\end{enumerate}
+
+ 
+ \section{Conclusion}
+
+ From this experiment, it is clear that Boyer-Moore significantly outperforms Naive Search in most cases, particularly for larger text sizes. Naive Search becomes inefficient as text size increases, leading to noticeable spikes in runtime. However, for small text sizes  or when the pattern is very short, Naive Search still performs reasonably well.
+
+
+
+\section{Appendix}
+
+\item Used ChatGPT to edit and correct the grammar.
+\item Used GitHub Copilot.
 
 \end{document}
+
